@@ -16,9 +16,6 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v2
-        
-      - name: interact_with_ChatGPT
-        uses: MorgunovE/AutoCoder@v1.0.3
 
       - name: Make the script file executable
         run: chmod +x ./scripts/script.sh
