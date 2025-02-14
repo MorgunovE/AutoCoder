@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v2
         
       - name: interact_with_ChatGPT
-        uses: MorgunovE/AutoCoder@
+        uses: MorgunovE/AutoCoder@v1.0.0
 
       - name: Make the script file executable
         run: chmod +x ./scripts/script.sh
