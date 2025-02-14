@@ -23,7 +23,7 @@ send_prompt_to_chatgpt() {
     curl -s -X POST "https://api.openai.com/v1/chat/completions" \
         -H "Authorization: Bearer $OPENAI_API_KEY" \
         -H "Content-Type: application/json" \
-        -d "{\"model\": \"gpt-4\", \"messages\": $MESSAGES_JSON, \"max_tokens\": 300}"
+        -d "{\"model\": \"text-davinci-003\", \"messages\": $MESSAGES_JSON, \"max_tokens\": 300}"
 }
 
 # Function to save code snippet to file
