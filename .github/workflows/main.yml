@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: make_the_script_file_executable
-        run: chmod +x scripts/script.sh
+        run: chmod +x ./scripts/script.sh
         
       - name: checkout_the_repository
         uses: actions/checkout@v2
