@@ -10,28 +10,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: make the script file executable
+      - name: make_the_script_file_executable
         run: chmod +x scripts/script.sh
         
-      - name: checkout the repository
+      - name: checkout_the_repository
         uses: actions/checkout@v2
 
-      - name: upload artifacts
+      - name: upload_artifacts
         uses: actions/upload-artifact@v4
         with:
           name: autocoder-artifact
           path: autocoder-bot
 
-      - name: download artifacts
+      - name: download_artifacts
         uses: actions/download-artifact@v4
         with:
           name: autocoder-artifact
           path: autocoder-artifact
 
-      - name: list files recursively
+      - name: list_files_recursively
         run: ls -R autocoder-artifact
         
-      - name: run the script
+      - name: run_the_script
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPOSITORY: ${{ github.repository }}
