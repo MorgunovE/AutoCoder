@@ -1,0 +1,20 @@
+version: '3'
+services:
+  frontend:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html
+    labels:
+      - autocoder-bot
+  backend:
+    image: node:14
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend:/usr/src/app
+    environment:
+      - NODE_VERSION=18
+    labels:
+      - autocoder-bot
