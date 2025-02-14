@@ -28,7 +28,7 @@ outputs:
     description: The URL of the pull request that has been automatically created, containing the auto-generated code for review and potential merging.
 
 runs:
-  using: composite
+  using: 'composite'
   steps:
     - name: Checkout the repository
       uses: actions/checkout@v2
@@ -39,6 +39,9 @@ runs:
     - name: Run the script
       run: ${{ inputs.script_path }} ${{ inputs.github_token }} ${{ inputs.repository }} ${{ inputs.issue_number }} ${{ inputs.openai_api_key }}
       shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.github_token }}
+        OPENAI_API_KEY: ${{ inputs.openai_api_key }}
 
     - name: Configure git
       run: |
