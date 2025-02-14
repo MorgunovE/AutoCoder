@@ -30,10 +30,10 @@ outputs:
 runs:
   using: 'composite'
   steps:
-    - name: Checkout the repository
+    - name: checkout__the_repository
       uses: actions/checkout@v2
 
-    - name: Make the script file executable
+    - name: make_the_script_executable
       run: chmod +x ${{ inputs.script_path }}
 
     - name: Run the script
@@ -43,17 +43,7 @@ runs:
         GITHUB_TOKEN: ${{ inputs.github_token }}
         OPENAI_API_KEY: ${{ inputs.openai_api_key }}
 
-    - name: Configure git
-      run: |
-        git config --global user.name "autocoder-bot"
-        git config --global user.email "actions@github.com"
-
-    - name: Commit changes
-      run: |
-        git add .
-        git commit -m "Add generated code for issue #${{ inputs.issue_number }}"
-
-    - name: Create Pull Request
+    - name: create_pull_request
       uses: peter-evans/create-pull-request@v7
       with:
         token: ${{ inputs.github_token }}
@@ -63,3 +53,10 @@ runs:
         title: "Add generated code for issue #${{ inputs.issue_number }}"
         body: "This pull request contains the generated code for issue #${{ inputs.issue_number }}."
         labels: ${{ inputs.label }}
+
+    - name: configure_credentials_or_commit_files
+      run: |
+        git config --global user.name "autocoder-bot"
+        git config --global user.email "actions@github.com"
+        "git add ."
+        "git commit -m"
