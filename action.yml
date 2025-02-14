@@ -54,6 +54,7 @@ runs:
         title: "Add generated code for issue #${{ inputs.issue_number }}"
         body: "This pull request contains the generated code for issue #${{ inputs.issue_number }}."
         labels: ${{ inputs.label }}
+        recreate-branch: true
 
     - name: configure_credentials_or_commit_files
       run: |
