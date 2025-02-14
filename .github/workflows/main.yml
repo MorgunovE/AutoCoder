@@ -18,10 +18,17 @@ jobs:
         uses: actions/checkout@v2
 
       - name: interact with ChatGPT
-        uses: MorgunovE/AutoCoder@v1.0.6
+        uses: MorgunovE/AutoCoder@v1.0.7
+        with:
+          SCRIPT_PATH: ./scripts/script.sh
+          LABEL: autocoder-bot
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPOSITORY: ${{ github.repository }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
       - name: Make the script file executable
-        run: chmod +x "$GITHUB_ACTION_PATH/scripts/script.sh"
+        run: chmod +x $GITHUB_ACTION_PATH/scripts/script.sh
         shell: bash
 
       - name: Run the script
