@@ -1,0 +1,62 @@
+name: AutoCoder
+description: This action automates the process of generating code from GitHub issues using OpenAI's ChatGPT and subsequently creates a pull request with the generated code for review.
+author: Your Name or Organization
+
+inputs:
+  github_token:
+    description: Personal access token (PAT) used for GitHub API authentication. This token is required to create pull requests and handle other repository interactions.
+    required: true
+  repository:
+    description: The repository where the action will be executed.
+    required: true
+  issue_number:
+    description: The number of the issue that triggered the action.
+    required: true
+  openai_api_key:
+    description: API key for OpenAI, enabling interactions with the ChatGPT service to generate code based on issue descriptions.
+    required: true
+  script_path:
+    description: The path to the script that interacts with ChatGPT and generates code.
+    required: true
+  label:
+    description: Allows users to customize the label that triggers the action.
+    required: true
+    default: autocoder-bot
+
+outputs:
+  pull_request_url:
+    description: The URL of the pull request that has been automatically created, containing the auto-generated code for review and potential merging.
+
+runs:
+  using: composite
+  steps:
+    - name: Checkout the repository
+      uses: actions/checkout@v2
+
+    - name: Make the script file executable
+      run: chmod +x ${{ inputs.script_path }}
+
+    - name: Run the script
+      run: ${{ inputs.script_path }} ${{ inputs.github_token }} ${{ inputs.repository }} ${{ inputs.issue_number }} ${{ inputs.openai_api_key }}
+      shell: bash
+
+    - name: Configure git
+      run: |
+        git config --global user.name "autocoder-bot"
+        git config --global user.email "actions@github.com"
+
+    - name: Commit changes
+      run: |
+        git add .
+        git commit -m "Add generated code for issue #${{ inputs.issue_number }}"
+
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v7
+      with:
+        token: ${{ inputs.github_token }}
+        commit-message: "Add generated code for issue #${{ inputs.issue_number }}"
+        branch: autocoder-branch-${{ inputs.issue_number }}
+        base: main
+        title: "Add generated code for issue #${{ inputs.issue_number }}"
+        body: "This pull request contains the generated code for issue #${{ inputs.issue_number }}."
+        labels: ${{ inputs.label }}
