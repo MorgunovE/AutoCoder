@@ -33,6 +33,9 @@ runs:
     - name: checkout__the_repository
       uses: actions/checkout@v2
 
+    - name: interact_with_ChatGPT
+      uses: MorgunovE/AutoCoder@
+
     - name: make_the_script_executable
       run: chmod +x ${{ inputs.script_path }}
 
