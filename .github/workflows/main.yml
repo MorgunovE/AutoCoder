@@ -4,37 +4,47 @@ on:
   issues:
     types: [opened, reopened, labeled]
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   generate_code:
     if: contains(github.event.issue.labels.*.name, 'autocoder-bot')
     runs-on: ubuntu-latest
 
     steps:
-      - name: make_the_script_file_executable
-        run: chmod +x ./scripts/script.sh
-        
-      - name: checkout_the_repository
+      - name: Checkout the repository
         uses: actions/checkout@v2
 
-      - name: upload_artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: autocoder-artifact
-          path: autocoder-bot
+      - name: Make the script file executable
+        run: chmod +x ./scripts/script.sh
 
-      - name: download_artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: autocoder-artifact
-          path: autocoder-artifact
-
-      - name: list_files_recursively
-        run: ls -R autocoder-artifact
-        
-      - name: run_the_script
+      - name: Run the script
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPOSITORY: ${{ github.repository }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: ./scripts/script.sh $GITHUB_TOKEN $REPOSITORY $ISSUE_NUMBER $OPENAI_API_KEY
+
+      - name: Configure git
+        run: |
+          git config --global user.name "autocoder-bot"
+          git config --global user.email "actions@github.com"
+
+      - name: Commit changes
+        run: |
+          git add .
+          git commit -m "Add generated code for issue #${{ github.event.issue.number }}"
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "Add generated code for issue #${{ github.event.issue.number }}"
+          branch: autocoder-branch-${{ github.event.issue.number }}
+          base: main
+          title: "Add generated code for issue #${{ github.event.issue.number }}"
+          body: "This pull request contains the generated code for issue #${{ github.event.issue.number }}."
+          labels: autocoder-bot
