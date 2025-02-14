@@ -17,13 +17,15 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v2
 
+      - name: interact with ChatGPT
+        uses: MorgunovE/AutoCoder@v1.0.4
+
       - name: Make the script file executable
         run: chmod +x ./scripts/script.sh
-
-      - name: interact_with_ChatGPT
-        uses: MorgunovE/AutoCoder@v1.0.3
+        shell: bash
 
       - name: Run the script
+        shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPOSITORY: ${{ github.repository }}
@@ -35,11 +37,13 @@ jobs:
         run: |
           git config --global user.name "autocoder-bot"
           git config --global user.email "actions@github.com"
+        shell: bash
 
       - name: Commit changes
         run: |
           git add .
           git commit -m "Add generated code for issue #${{ github.event.issue.number }}"
+        shell: bash
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
